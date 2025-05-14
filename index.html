@@ -9,26 +9,26 @@
 <body>
     <nav>
         <div class="nav-left">
-            <img src="sources/Brand Logo.svg" alt="Brand Logo">
+            <a href="#" class="logo"><img src="sources/Brand Logo.svg" alt="Brand Logo"></a>
             <ul class="nav-li">
                 <li>
-                    <a href="#">About us</a>
+                    <a href="#about">About us</a>
                 </li>
                 <li>
-                    <a href="#">Team</a>
+                    <a href="#experts">Team</a>
                 </li>
                 <li>
-                    <a href="#">Solutions</a>
+                    <a href="#features">Solutions</a>
                 </li>
                 <li>
-                    <a href="#">Blog</a>
+                    <a href="#blog">Blog</a>
                 </li>
             </ul>
         </div>
         <a href="#" class="sub-cta">Get in touch</a>
     </nav>
 
-    <section>
+    <section id="hero">
         <div class="hero">
             <div class="hero-wrapper">
                 <div class="hero-top">
@@ -75,7 +75,7 @@
         <div class="bottom-gradient"></div>
     </section>
     
-    <section>
+    <section id="features">
         <div class="features">
             <div class="features-wrapper">
                 <div class="features-left">
@@ -96,7 +96,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="about">
         <div class="sunny-container">
             <div class="sunny-container_box">
                 <h4 class="subtitle">
@@ -140,7 +140,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="experts">
         <div class="experts">
             <div class="experts-top">
                 <h2>Meet our experts</h2>
@@ -253,7 +253,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="goal">
         <div class="cta-page">
             <img class="lines reset" src="sources/CTA-Background-Lines.svg" alt="">
             <div class="cta-page_wrapper">
@@ -263,7 +263,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="faq1">
         <div class="sunny-container">
             <div class="sunny-container_box">
                 <h4 class="subtitle">
@@ -307,7 +307,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="blog">
         <div class="sunny-container">
             <div class="sunny-container_box pure">
                 <div class="sunny-container_wrapper">
@@ -369,7 +369,7 @@
         </div>
     </section>
 
-    <section>
+    <section id="faq2">
         <div class="faq_container">
             <h2>FAQ</h2>
             <h3>Here you will find the answers to the frequently asked questions.</h3>
@@ -417,15 +417,15 @@
             </div>
         </div>
         <div class="bottom-footer">
-            <img src="sources/Brand Logo.svg" alt="Brand Logo">
+            <a href="#" class="logo"><img src="sources/Brand Logo.svg" alt="Brand Logo"></a>
             <div class="navigation">
                 <ul>
                     <h4>Platform</h4>
                     <li>
-                        <a href="#">Solutions</a>
+                        <a href="#features">Solutions</a>
                     </li>
                     <li>
-                        <a href="#">How it works</a>
+                        <a href="#faq1">How it works</a>
                     </li>
                     <li>
                         <a href="#">Pricing</a>
@@ -434,10 +434,10 @@
                 <ul>
                     <h4>Company</h4>
                     <li>
-                        <a href="#">About</a>
+                        <a href="#about">About</a>
                     </li>
                     <li>
-                        <a href="#">Our Mission</a>
+                        <a href="#goal">Our Mission</a>
                     </li>
                     <li>
                         <a href="#">Careers <span class="cta-icon"><img src="sources/hiring.svg" alt="Hiring"></span></a>
@@ -449,13 +449,13 @@
                 <ul>
                     <h4>Resources</h4>
                     <li>
-                        <a href="#">Blog</a>
+                        <a href="#blog">Blog</a>
                     </li>
                     <li>
                         <a href="#">Help Center</a>
                     </li>
                     <li>
-                        <a href="#">Support</a>
+                        <a href="#faq2">Support</a>
                     </li>
                 </ul>
             </div>
@@ -481,32 +481,65 @@
     </footer>
 
     <!-- shhh nie widac -->
-     <script>
+    <script>
         const slider = document.querySelector('.reviews');
-        let down = false;
+        let isDown = false;
         let startX;
         let scrollLeft;
-
-        slider.addEventListener('mousedown', (e) => {
-            down = true;
-            slider.classList.add('active');
-            startX = e.pageX - slider.offsetLeft;
+        let isTouch = false;
+    
+        function handleStart(x) {
+            isDown = true;
+            startX = x - slider.offsetLeft;
             scrollLeft = slider.scrollLeft;
-        });
-        slider.addEventListener('mouseleave', (e) => {
-            down = false;
-            slider.classList.remove('active');
-        });
-        slider.addEventListener('mouseup', (e) => {
-            down = false;
-            slider.classList.remove('active');
-        });
-        slider.addEventListener('mousemove', (e) => {
-            if (!down) return;
-            e.preventDefault();
-            const x = e.pageX - slider.offsetLeft;
-            const walk = (x - startX) * 2;
+            slider.classList.add('active');
+        }
+    
+        function handleMove(x) {
+            if (!isDown) return;
+            const dx = x - slider.offsetLeft;
+            const walk = (dx - startX) * 1.5;
             slider.scrollLeft = scrollLeft - walk;
+        }
+    
+        function handleEnd() {
+            isDown = false;
+            slider.classList.remove('active');
+        }
+    
+        const reviews = document.querySelector('.reviews');
+        const progressFill = document.querySelector('.slider.testimonial > .fill');
+
+        function updateProgressBar() {
+            const scrollLeft = reviews.scrollLeft;
+            const maxScrollLeft = reviews.scrollWidth - reviews.clientWidth;
+            const percentage = (scrollLeft / maxScrollLeft) * 100;
+            progressFill.style.width = `${percentage}%`;
+        }
+
+        reviews.addEventListener('scroll', updateProgressBar);
+
+        updateProgressBar();
+
+        slider.addEventListener('mousedown', (e) => handleStart(e.pageX));
+        slider.addEventListener('mousemove', (e) => {
+            e.preventDefault();
+            handleMove(e.pageX);
+        });
+        slider.addEventListener('mouseup', handleEnd);
+        slider.addEventListener('mouseleave', handleEnd);
+    
+        slider.addEventListener('touchstart', (e) => handleStart(e.touches[0].pageX), { passive: true });
+        slider.addEventListener('touchmove', (e) => handleMove(e.touches[0].pageX), { passive: false });
+        slider.addEventListener('touchend', handleEnd);
+    
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
         });
     </script>
 </body>
